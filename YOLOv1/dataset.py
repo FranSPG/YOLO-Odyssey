@@ -37,7 +37,7 @@ class VOCDataset(Dataset):
         if self.transform:
             image, boxes = self.transform(image, boxes)
 
-        label_matrix = torch.zeros((self.S, self.S, self.C + 5*self.B))
+        label_matrix = torch.zeros((self.S, self.S, self.C + 5 * self.B))
 
         for box in boxes:
             class_label, x, y, width, height = box.tolist()
