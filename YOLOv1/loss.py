@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+
 from utils import intersection_over_union
 
 
@@ -14,7 +15,7 @@ class YoloLoss(nn.Module):
         self.lambda_coord = 5
 
     def forward(self, predictions, target):
-        predictions = predictions.reshape(-1, self.S, self.S, self.C + self.B*5)
+        predictions = predictions.reshape(-1, self.S, self.S, self.C + self.B * 5)
 
         iou_b1 = intersection_over_union(predictions[..., 21:25], target[..., 21:25])
         iou_b2 = intersection_over_union(predictions[..., 26:30], target[..., 21:25])
@@ -25,8 +26,8 @@ class YoloLoss(nn.Module):
         # For box coordinates
 
         box_predictions = exists_box * (
-            best_box * predictions[..., 26:30]
-            + (1 - best_box) * predictions[..., 21:25]
+                best_box * predictions[..., 26:30]
+                + (1 - best_box) * predictions[..., 21:25]
         )
 
         box_targets = exists_box * target[..., 21:25]
@@ -45,7 +46,7 @@ class YoloLoss(nn.Module):
         # For object loss
 
         pred_box = (
-            best_box * predictions[..., 25:26] + (1 - best_box) * predictions[..., 20:21]
+                best_box * predictions[..., 25:26] + (1 - best_box) * predictions[..., 20:21]
         )
 
         object_loss = self.mse(
